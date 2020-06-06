@@ -3,37 +3,10 @@ const config = require('config');
 const router = express.Router();
 const cors = require('cors');
 const auth = require('../../../middleware/auth1');
+const upload = require('../../../middleware/upload');
 const Preschool = require('../../../models/Preschool');
 const { check, validationResult } = require('express-validator');
 var multer = require('multer');
-// var upload = multer({ dest: 'uploads/' });
-
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix);
-  },
-});
-
-const fileFilter = (req, file, cb) => {
-  // reject a file
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-var upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5,
-  },
-  fileFilter: fileFilter,
-});
 
 //@route GET api/preschool
 //@desc  Create or Update schhol
@@ -41,7 +14,16 @@ var upload = multer({
 
 router.post(
   '/',
-  upload.single('images'),
+  upload.fields([
+    {
+      name: 'images',
+      maxCount: 1,
+    },
+    {
+      name: 'photos',
+      maxCount: 12,
+    },
+  ]),
   [
     auth,
     [
@@ -85,6 +67,17 @@ router.post(
     ],
   ],
   async (req, res) => {
+    console.log('ss', req.files.photos);
+    let fileurl = [];
+    let saveurldb = [];
+    let file = '';
+    if (req.files.photos != undefined) {
+      file = req.files.photos;
+      file.forEach((result) => {
+        fileurl.push('http:' + req.hostname + ':' + 5000 + '/' + result.path);
+        saveurldb.push(result.path);
+      });
+    }
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -116,8 +109,9 @@ router.post(
       required_document,
       admission_process,
     } = req.body;
-    images = req.file.path;
-    // images = req.file.path;
+    images =
+      'http:' + req.hostname + ':' + 5000 + '/' + req.files.images[0].path;
+    photos = fileurl.join();
 
     // Build School Object
     const preschoolFeilds = {};
@@ -154,7 +148,8 @@ router.post(
       preschoolFeilds.required_document = required_document;
     if (admission_process)
       preschoolFeilds.admission_process = admission_process;
-    // if (images) preschoolFeilds.images = images;
+    if (images) preschoolFeilds.images = images;
+    if (photos) preschoolFeilds.photos = photos;
 
     try {
       let preschool = await Preschool.findOne({ _id: req.vender.id });
@@ -265,6 +260,25 @@ router.get('/vender/:vender_id', async (req, res) => {
     }
     res.status(500).send('server error');
   }
+});
+
+// //@route  DELETE api/preschool/:_id
+// //@desc   Delete  preschool
+// //access  Public
+
+router.delete('/:_id', (req, res, next) => {
+  const id = req.params._id;
+  Preschool.remove({ _id: id })
+    .exec()
+    .then((result) => {
+      res.status(200).json({ status: 1, message: ' Deleted successfully' });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
 });
 
 //@route GET api/find/:query

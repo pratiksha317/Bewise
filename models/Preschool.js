@@ -107,7 +107,11 @@ const PreschoolSchema = new mongoose.Schema({
   },
   images: {
     type: String,
-    // required: true,
+    required: true,
+  },
+  photos: {
+    type: String,
+    required: true,
   },
 });
 

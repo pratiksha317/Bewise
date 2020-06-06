@@ -1,8 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-// const multer = require('multer');
-// const upload = require('C:/Users/Smitiv/Desktop/MERN/middleware/upload');
 
 const connectDB = require('./config/db');
 
@@ -49,20 +47,13 @@ app.use('/api/auth1', require('./config/routes/api/auth1'));
 app.use('/api/playarea', require('./config/routes/api/playarea'));
 app.use('/api/school', require('./config/routes/api/school'));
 app.use('/api/preschool', require('./config/routes/api/preschool'));
-app.use('/api/dance', require('./config/routes/api/dance'));
-app.use('/api/drawing', require('./config/routes/api/drawing'));
 app.use('/api/partyhall', require('./config/routes/api/partyhall'));
-app.use('/api/sports', require('./config/routes/api/sports'));
 app.use('/api/tution', require('./config/routes/api/tution'));
-app.use('/api/yoga', require('./config/routes/api/yoga'));
-app.use('/api/music', require('./config/routes/api/music'));
 app.use('/api/camps', require('./config/routes/api/camps'));
-// app.use('/api/user_reg', require('./config/routes/api/user_reg'));
-
-// app.use('/api/view_school', require('./config/routes/api/view_school'));
-
-// app.use('/api/profile', require('./config/routes/api/profile'));
-// app.use('/api/posts', require('./config/routes/api/posts'));
+app.use(
+  '/api/creativeActivity',
+  require('./config/routes/api/creativeActivity')
+);
 
 const PORT = process.env.PORT || 5000;
 

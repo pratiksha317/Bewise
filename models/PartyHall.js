@@ -75,8 +75,12 @@ const PartySchema = new mongoose.Schema({
     required: true,
   },
 
-  timing: {
+  // timing: {
+  //   type: String,
+  // },
+  facilities: {
     type: String,
+    required: true,
   },
   weekday_rates: {
     type: String,
@@ -98,6 +102,11 @@ const PartySchema = new mongoose.Schema({
 
   images: {
     type: String,
+    required: true,
+  },
+  photos: {
+    type: String,
+    required: true,
   },
 });
 

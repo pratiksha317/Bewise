@@ -3,46 +3,28 @@ const config = require('config');
 const router = express.Router();
 const cors = require('cors');
 const auth = require('../../../middleware/auth1');
+const upload = require('../../../middleware/upload');
 const Vender = require('../../../models/Vender');
 const PartyHall = require('../../../models/PartyHall');
 const { check, validationResult } = require('express-validator');
 const multer = require('multer');
-// var upload = multer({ dest: 'uploads/' });
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix);
-  },
-});
-
-const fileFilter = (req, file, cb) => {
-  // reject a file
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-var upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5,
-  },
-  fileFilter: fileFilter,
-});
 
 //@route GET api/school
-//@desc  Create or Update schhol
+//@desc  Create events
 //access  Private
 
 router.post(
   '/',
-  upload.single('images'),
+  upload.fields([
+    {
+      name: 'images',
+      maxCount: 1,
+    },
+    {
+      name: 'photos',
+      maxCount: 12,
+    },
+  ]),
   [
     auth,
     [
@@ -52,30 +34,23 @@ router.post(
       check('type_of_the_party', 'type_of_the_party is required')
         .not()
         .isEmpty(),
-
       check('email_id', 'email_id is required').not().isEmpty(),
       check('phone_number', 'phone_number is required').not().isEmpty(),
       check('landline_number', 'landline_number is required').not().isEmpty(),
-
       check('fax_number', 'fax_number is required').not().isEmpty(),
       check('website', 'website is required').not().isEmpty(),
       check('country', 'country is required').not().isEmpty(),
       check('state', 'state year is required').not().isEmpty(),
       check('location', 'location is required').not().isEmpty(),
       check('pincode', 'pincode is required').not().isEmpty(),
-
       check('address', 'address year is required').not().isEmpty(),
       check('about_partyhall', 'about_partyhall is required').not().isEmpty(),
       check('google_location', 'google_location is required').not().isEmpty(),
-
       check('number_of_people_in_hall', 'number_of_people_in_hall is required')
         .not()
         .isEmpty(),
-
-      check('timing', 'timing is required').not().isEmpty(),
       check('weekday_rates', 'weekday_rates is required').not().isEmpty(),
       check('weekend_rates', 'weekend_rates is required').not().isEmpty(),
-
       check('establishment_Year', 'establishment_Year is required')
         .not()
         .isEmpty(),
@@ -83,6 +58,17 @@ router.post(
     ],
   ],
   async (req, res) => {
+    console.log('ss', req.files.photos);
+    let fileurl = [];
+    let saveurldb = [];
+    let file = '';
+    if (req.files.photos != undefined) {
+      file = req.files.photos;
+      file.forEach((result) => {
+        fileurl.push('http:' + req.hostname + ':' + 5000 + '/' + result.path);
+        saveurldb.push(result.path);
+      });
+    }
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -92,7 +78,7 @@ router.post(
       incharge_name,
       partyhall_name,
       type_of_the_party,
-
+      facilities,
       email_id,
       phone_number,
       landline_number,
@@ -106,14 +92,14 @@ router.post(
       about_partyhall,
       google_location,
       number_of_people_in_hall,
-
-      timing,
       weekday_rates,
       weekend_rates,
       establishment_Year,
-
       avg_cost,
     } = req.body;
+    images =
+      'http:' + req.hostname + ':' + 5000 + '/' + req.files.images[0].path;
+    photos = fileurl.join();
 
     // Build School Object
     const partyFeilds = {};
@@ -123,12 +109,10 @@ router.post(
     if (incharge_name) partyFeilds.incharge_name = incharge_name;
     if (partyhall_name) partyFeilds.partyhall_name = partyhall_name;
     if (type_of_the_party) partyFeilds.type_of_the_party = type_of_the_party;
-
     if (email_id) partyFeilds.email_id = email_id;
     if (phone_number) partyFeilds.phone_number = phone_number;
     if (landline_number) partyFeilds.landline_number = landline_number;
     if (fax_number) partyFeilds.fax_number = fax_number;
-
     if (website) partyFeilds.website = website;
     if (country) partyFeilds.country = country;
     if (state) partyFeilds.state = state;
@@ -137,69 +121,33 @@ router.post(
     if (address) partyFeilds.address = address;
     if (about_partyhall) partyFeilds.about_partyhall = about_partyhall;
     if (google_location) partyFeilds.google_location = google_location;
-
     if (number_of_people_in_hall)
       partyFeilds.number_of_people_in_hall = number_of_people_in_hall;
-
-    if (timing) partyFeilds.timing = timing;
     if (weekday_rates) partyFeilds.weekday_rates = weekday_rates;
     if (weekend_rates) partyFeilds.weekend_rates = weekend_rates;
-
     if (establishment_Year) partyFeilds.establishment_Year = establishment_Year;
-
+    if (facilities) partyFeilds.facilities = facilities;
     if (avg_cost) partyFeilds.avg_cost = avg_cost;
-
-    // partyFeilds.addressInformation = {};
-    // if (email_id) partyFeilds.addressInformation.email_id = email_id;
-    // if (phone_number)
-    //   partyFeilds.addressInformation.phone_number = phone_number;
-    // if (landline_number)
-    //   partyFeilds.addressInformation.landline_number = landline_number;
-    // if (fax_number) partyFeilds.addressInformation.fax_number = fax_number;
-
-    // if (website) partyFeilds.addressInformation.website = website;
-
-    // if (state) partyFeilds.addressInformation.state = state;
-    // if (location) partyFeilds.addressInformation.location = location;
-    // if (pincode) partyFeilds.addressInformation.pincode = pincode;
-    // if (address) partyFeilds.addressInformation.address = address;
-    // if (about_partyhall)
-    //   partyFeilds.addressInformation.about_partyhall = about_partyhall;
-    // if (google_location)
-    //   partyFeilds.addressInformation.google_location = google_location;
-
-    // partyFeilds.keyInformation = {};
-    // if (number_of_people_in_hall)
-    //   partyFeilds.keyInformation.number_of_people_in_hall = number_of_people_in_hall;
-
-    // if (timing) partyFeilds.keyInformation.timing = timing;
-
-    // if (establishment_Year)
-    //   partyFeilds.keyInformation.establishment_Year = establishment_Year;
-
-    // if (avg_anual_fee) partyFeilds.keyInformation.avg_anual_fee = avg_anual_fee;
-
-    // if (addmission_fee)
-    //   partyFeilds.keyInformation.addmission_fee = addmission_fee;
-    // if (is_refundable) partyFeilds.keyInformation.is_refundable = is_refundable;
+    if (images) partyFeilds.images = images;
+    if (photos) partyFeilds.photos = photos;
 
     try {
-      let partyhall = await PartyHall.findOne({ vender: req.vender.id });
+      let partyhall = await PartyHall.findOne({ _id: req.vender.id });
 
-      if (partyhall) {
-        //Update
-        partyhall = await PartyHall.findOneAndUpdate(
-          { vender: req.vender.id },
-          { $set: partyFeilds },
-          { new: true }
-        );
+      // if (partyhall) {
+      //   //Update
+      //   partyhall = await PartyHall.findOneAndUpdate(
+      //     { vender: req.vender.id },
+      //     { $set: partyFeilds },
+      //     { new: true }
+      //   );
 
-        return res.json({
-          status: 1,
-          message: 'data updated successfully',
-          data: partyhall,
-        });
-      }
+      //   return res.json({
+      //     status: 1,
+      //     message: 'data updated successfully',
+      //     data: partyhall,
+      //   });
+      // }
 
       //Create
       partyhall = new PartyHall(partyFeilds);
@@ -217,8 +165,8 @@ router.post(
   }
 );
 
-//@route GET api/school
-//@desc  Get all school
+//@route GET api/partyhall
+//@desc  Get all partyhall
 //access  Public
 
 router.get('/', async (req, res) => {
@@ -236,7 +184,9 @@ router.get('/', async (req, res) => {
   }
 });
 
-// get particular data
+//@route GET api/partyhall/view
+//@desc  Get all prefered partyhall
+//access  Public
 
 router.get('/view', (req, res, next) => {
   PartyHall.find()
@@ -265,14 +215,14 @@ router.get('/view', (req, res, next) => {
     });
 });
 
-//@route GET api/school/vender/vender_id
-//@desc  Get school by User Id
+//@route GET api/partyhall/vender/vender_id
+//@desc  Get partyhall by Id
 //access  Public
 
 router.get('/vender/:vender_id', async (req, res) => {
   try {
     const partyhall = await PartyHall.findOne({
-      vender: req.params.vender_id,
+      _id: req.params.vender_id,
     });
 
     if (!partyhall)
@@ -292,8 +242,27 @@ router.get('/vender/:vender_id', async (req, res) => {
   }
 });
 
+// //@route  DELETE api/partyhall/:_id
+// //@desc   Delete  partyhall
+// //access  Public
+
+router.delete('/:_id', (req, res, next) => {
+  const id = req.params._id;
+  PartyHall.remove({ _id: id })
+    .exec()
+    .then((result) => {
+      res.status(200).json({ status: 1, message: ' Deleted successfully' });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+});
+
 //@route GET api/find/:query
-//@desc  Search Yoga school by location
+//@desc  Search partyhall school by location
 //access  Public
 
 router.get('/find/:query', cors(), function (req, res) {
@@ -319,7 +288,7 @@ router.get('/find/:query', cors(), function (req, res) {
 });
 
 //@route GET api/find/:query
-//@desc  Search Yoga school by location
+//@desc  Search partyhall  by type of location
 //access  Public
 
 router.get('/type_of_the_party/:query', cors(), function (req, res) {

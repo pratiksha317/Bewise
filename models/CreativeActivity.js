@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
-const DrawSchema = new mongoose.Schema({
+const CreativeActivitySchema = new mongoose.Schema({
   vender: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'vender',
+  },
+  registration_no: {
+    type: String,
+    required: true,
   },
   area: {
     type: String,
@@ -13,7 +17,7 @@ const DrawSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  artist_name: {
+  type_of_orgainsation: {
     type: String,
     required: true,
   },
@@ -26,6 +30,17 @@ const DrawSchema = new mongoose.Schema({
     required: true,
   },
   landline_number: {
+    type: String,
+    required: true,
+  },
+  sub_sub_type: {
+    type: String,
+  },
+  // trainee_name: {
+  //   type: String,
+  //   required: true,
+  // },
+  min_age: {
     type: String,
     required: true,
   },
@@ -53,7 +68,7 @@ const DrawSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  about_school: {
+  about: {
     type: String,
     required: true,
   },
@@ -62,15 +77,17 @@ const DrawSchema = new mongoose.Schema({
     required: true,
   },
 
-  type_of_drawing: {
+  type: {
     type: String,
     required: true,
   },
-  available_days: {
+  sub_type: {
     type: String,
-    required: true,
   },
-  number_of_artist: {
+  type_other: {
+    type: String,
+  },
+  number_of_trainee: {
     type: String,
     required: true,
   },
@@ -90,9 +107,26 @@ const DrawSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  class_frequency: {
+    type: String,
+    required: true,
+  },
+  fax_number: {
+    type: String,
+    required: true,
+  },
   images: {
     type: String,
+    required: true,
   },
+  photos: {
+    type: String,
+    required: true,
+  },
+  //   },
+  // ],
 });
-
-module.exports = Drawing = mongoose.model('drawing', DrawSchema);
+module.exports = CreativeActivity = mongoose.model(
+  'creativeActivity',
+  CreativeActivitySchema
+);

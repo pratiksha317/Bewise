@@ -3,36 +3,9 @@ const router = express.Router();
 const cors = require('cors');
 const auth = require('../../../middleware/auth1');
 const Camps = require('../../../models/Camps');
+const upload = require('../../../middleware/upload');
 const { check, validationResult } = require('express-validator');
 const multer = require('multer');
-// var upload = multer({ dest: 'uploads/' });
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix);
-  },
-});
-
-const fileFilter = (req, file, cb) => {
-  // reject a file
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-var upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5,
-  },
-  fileFilter: fileFilter,
-});
 
 //@route POST api/camps
 //desc Create or update camps data
@@ -40,7 +13,16 @@ var upload = multer({
 
 router.post(
   '/',
-  upload.single('images'),
+  upload.fields([
+    {
+      name: 'images',
+      maxCount: 1,
+    },
+    {
+      name: 'photos',
+      maxCount: 12,
+    },
+  ]),
   [
     auth,
     [
@@ -68,6 +50,17 @@ router.post(
     ],
   ],
   async (req, res) => {
+    console.log('ss', req.files.photos);
+    let fileurl = [];
+    let saveurldb = [];
+    let file = '';
+    if (req.files.photos != undefined) {
+      file = req.files.photos;
+      file.forEach((result) => {
+        fileurl.push('http:' + req.hostname + ':' + 5000 + '/' + result.path);
+        saveurldb.push(result.path);
+      });
+    }
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -93,6 +86,9 @@ router.post(
       timing,
       avg_cost,
     } = req.body;
+    images =
+      'http:' + req.hostname + ':' + 5000 + '/' + req.files.images[0].path;
+    photos = fileurl.join();
 
     // Build Playarea Object
     const campsFeild = {};
@@ -101,42 +97,41 @@ router.post(
     if (period) campsFeild.period = period;
     if (camp_name) campsFeild.camp_name = camp_name;
     if (type_of_the_camps) campsFeild.type_of_the_camps = type_of_the_camps;
-
     if (phone_number) campsFeild.phone_number = phone_number;
     if (website) campsFeild.website = website;
     if (about_camp) campsFeild.about_camp = about_camp;
     if (email_id) campsFeild.email_id = email_id;
     if (landline_number) campsFeild.landline_number = landline_number;
     if (fax_number) campsFeild.fax_number = fax_number;
-
     if (timing) campsFeild.timing = timing;
     if (weekday_rate) campsFeild.weekday_rate = weekday_rate;
     if (weekend_rate) campsFeild.weekend_rate = weekend_rate;
     if (avg_cost) campsFeild.avg_cost = avg_cost;
-
     if (country) campsFeild.country = country;
     if (state) campsFeild.state = state;
     if (google_location) campsFeild.google_location = google_location;
     if (location) campsFeild.location = location;
     if (pincode) campsFeild.pincode = pincode;
+    if (images) campsFeild.images = images;
+    if (photos) campsFeild.photos = photos;
 
     try {
-      let camps = await Camps.findOne({ vender: req.vender.id });
+      let camps = await Camps.findOne({ _id: req.vender.id });
 
-      if (camps) {
-        //Update
-        camps = await Camps.findOneAndUpdate(
-          { vender: req.vender.id },
-          { $set: campsFeild },
-          { new: true }
-        );
+      // if (camps) {
+      //   //Update
+      //   camps = await Camps.findOneAndUpdate(
+      //     { vender: req.vender.id },
+      //     { $set: campsFeild },
+      //     { new: true }
+      //   );
 
-        return res.json({
-          status: 1,
-          message: 'Data updated successfully',
-          data: camps,
-        });
-      }
+      //   return res.json({
+      //     status: 1,
+      //     message: 'Data updated successfully',
+      //     data: camps,
+      //   });
+      // }
 
       //Create
       camps = new Camps(campsFeild);
@@ -154,8 +149,8 @@ router.post(
   }
 );
 
-//@route GET api/playarea
-//@desc  Get all playareas
+//@route GET api/camps
+//@desc  Get all camps
 //access  Public
 
 router.get('/', async (req, res) => {
@@ -174,7 +169,9 @@ router.get('/', async (req, res) => {
   }
 });
 
-// get particular data
+//@route GET api/camps/view
+//@desc  Get all camps of preffered data
+//access  Public
 
 router.get('/view', (req, res, next) => {
   Camps.find()
@@ -203,14 +200,14 @@ router.get('/view', (req, res, next) => {
     });
 });
 
-//@route GET api/playarea/vender/vender_id
-//@desc  Get playarea by vender Id
+//@route GET api/camps/vender/vender_id
+//@desc  Get camps by  Id
 //access  Public
 
 router.get('/vender/:vender_id', async (req, res) => {
   try {
     const camps = await Camps.findOne({
-      vender: req.params.vender_id,
+      _id: req.params.vender_id,
     });
 
     if (!camps)
@@ -230,8 +227,27 @@ router.get('/vender/:vender_id', async (req, res) => {
   }
 });
 
+// //@route  DELETE api/camps/:_id
+// //@desc   Delete  camps
+// //access  Public
+
+router.delete('/:_id', (req, res, next) => {
+  const id = req.params._id;
+  Camps.remove({ _id: id })
+    .exec()
+    .then((result) => {
+      res.status(200).json({ status: 1, message: ' Deleted successfully' });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+});
+
 //@route GET api/find/:query
-//@desc  sort playarea by city
+//@desc  sort camps by location
 //access  Public
 
 router.get('/find/:query', cors(), function (req, res) {

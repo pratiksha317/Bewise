@@ -79,6 +79,11 @@ const CampSchema = new mongoose.Schema({
 
   images: {
     type: String,
+    required: true,
+  },
+  photos: {
+    type: String,
+    required: true,
   },
 });
 

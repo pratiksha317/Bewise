@@ -139,16 +139,12 @@ const SchoolSchema = new mongoose.Schema({
   },
   images: {
     type: String,
-    // required: true,
+    required: true,
   },
-  // gallery: [
-  //   {
-  //     images: {
-  //       type: String,
-  //       required: true,
-  //     },
-  //   },
-  // ],
+  photos: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = School = mongoose.model('school', SchoolSchema);
