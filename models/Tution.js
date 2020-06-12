@@ -90,10 +90,10 @@ const TutionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  grade: {
-    type: String,
-    required: true,
-  },
+  // grade: {
+  //   type: String,
+  //   required: true,
+  // },
   number_of_teachers: {
     type: String,
     required: true,
@@ -119,6 +119,10 @@ const TutionSchema = new mongoose.Schema({
   addmission_fee: {
     type: String,
     required: true,
+  },
+
+  languages: {
+    type: String,
   },
 
   images: {

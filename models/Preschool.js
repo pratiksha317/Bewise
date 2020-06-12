@@ -5,6 +5,10 @@ const PreschoolSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'vender',
   },
+  registration_no: {
+    type: String,
+    required: true,
+  },
   ownerName: {
     type: String,
     required: true,
@@ -102,6 +106,18 @@ const PreschoolSchema = new mongoose.Schema({
     required: true,
   },
   admission_process: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  mode_of_payment: {
+    type: String,
+    required: true,
+  },
+  isrefund: {
     type: String,
     required: true,
   },

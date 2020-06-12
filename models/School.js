@@ -5,6 +5,10 @@ const SchoolSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'vender',
   },
+  registration_no: {
+    type: String,
+    required: true,
+  },
   ownerName: {
     type: String,
     required: true,

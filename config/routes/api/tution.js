@@ -50,7 +50,7 @@ router.post(
       check('about_tution', 'about_tution is required').not().isEmpty(),
       check('google_location', 'google_location is required').not().isEmpty(),
       check('subject', 'subject is required').not().isEmpty(),
-      check('grade', 'grade is required').not().isEmpty(),
+      // check('grade', 'grade is required').not().isEmpty(),
       check('number_of_teachers', 'number_of_teachers is required')
         .not()
         .isEmpty(),
@@ -71,7 +71,9 @@ router.post(
     if (req.files.photos != undefined) {
       file = req.files.photos;
       file.forEach((result) => {
-        fileurl.push('http:' + req.hostname + ':' + 5000 + '/' + result.path);
+        fileurl.push(
+          'http:' + '//' + req.hostname + ':' + 5000 + '/' + result.path
+        );
         saveurldb.push(result.path);
       });
     }
@@ -101,16 +103,23 @@ router.post(
       about_tution,
       google_location,
       subject,
-      grade,
+      // grade,
       number_of_teachers,
       timing,
       instruction_lang,
       establishment_Year,
       avg_anual_fee,
       addmission_fee,
+      languages,
     } = req.body;
     images =
-      'http:' + req.hostname + ':' + 5000 + '/' + req.files.images[0].path;
+      'http:' +
+      '//' +
+      req.hostname +
+      ':' +
+      5000 +
+      '/' +
+      req.files.images[0].path;
     photos = fileurl.join();
 
     // Build School Object
@@ -139,7 +148,7 @@ router.post(
     if (about_tution) tutionFeilds.about_tution = about_tution;
     if (google_location) tutionFeilds.google_location = google_location;
     if (subject) tutionFeilds.subject = subject;
-    if (grade) tutionFeilds.grade = grade;
+    // if (grade) tutionFeilds.grade = grade;
     if (number_of_teachers)
       tutionFeilds.number_of_teachers = number_of_teachers;
     if (timing) tutionFeilds.timing = timing;
@@ -148,6 +157,7 @@ router.post(
       tutionFeilds.establishment_Year = establishment_Year;
     if (avg_anual_fee) tutionFeilds.avg_anual_fee = avg_anual_fee;
     if (addmission_fee) tutionFeilds.addmission_fee = addmission_fee;
+    if (languages) tutionFeilds.languages = languages;
     if (images) tutionFeilds.images = images;
     if (photos) tutionFeilds.photos = photos;
 

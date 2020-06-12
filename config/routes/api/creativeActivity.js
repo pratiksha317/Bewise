@@ -43,7 +43,6 @@ router.post(
       check('email_id', 'email_id is required').not().isEmpty(),
       check('phone_number', 'phone_number is required').not().isEmpty(),
       check('landline_number', 'landline_number is required').not().isEmpty(),
-      check('min_age', 'min_age is required').not().isEmpty(),
       check('website', 'website is required').not().isEmpty(),
       check('country', 'country is required').not().isEmpty(),
       check('state', 'state year is required').not().isEmpty(),
@@ -203,7 +202,10 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const creativeActivity = await CreativeActivity.find();
+    const creativeActivity = await CreativeActivity.find().populate(
+      'vender',
+      'owner_name'
+    );
     console.log([creativeActivity]);
     return res.json({
       status: 1,
@@ -258,7 +260,7 @@ router.get('/vender/:vender_id', async (req, res) => {
   try {
     const creativeActivity = await CreativeActivity.findOne({
       _id: req.params.vender_id,
-    });
+    }).populate('vender', 'owner_name');
     console.log([creativeActivity]);
     if (!creativeActivity)
       return res.status(400).json({ status: 0, msg: 'data not found' });

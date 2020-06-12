@@ -27,26 +27,37 @@ router.post(
     auth,
     [
       check('area', 'area is required').not().isEmpty(),
-      check('type_of_playarea', 'type_of_playarea is required').not().isEmpty(),
+      check('registration_no', 'registeration_number is required')
+        .not()
+        .isEmpty(),
+      // check('type_of_playarea', 'type_of_playarea is required').not().isEmpty(),
       check('playarea_name', 'playarea_name is required').not().isEmpty(),
       check('age_group', 'age_group is required').not().isEmpty(),
       check('phone_number', 'phone_number is required').not().isEmpty(),
       check('website', 'website is required').not().isEmpty(),
       check('about_playarea', 'about_playarea is required').not().isEmpty(),
       check('email_id', 'email_id is required').not().isEmpty(),
-      check('price_per_hour', 'price_per_hour is required').not().isEmpty(),
+      // check('price_per_hour', 'price_per_hour is required').not().isEmpty(),
       check('no_of_support_staff', 'no_of_support_staff is required')
         .not()
         .isEmpty(),
       check('entry_fee', 'entry_fee is required').not().isEmpty(),
-      check('weekday_rate', 'weekday_rate is required').not().isEmpty(),
-      check('weekend_rate', 'weekend_rate is required').not().isEmpty(),
-      check('packages', 'packages is required').not().isEmpty(),
+      // check('weekday_rate', 'weekday_rate is required').not().isEmpty(),
+      // check('weekend_rate', 'weekend_rate is required').not().isEmpty(),
+      // check('packages', 'packages is required').not().isEmpty(),
       check('country', 'country is required').not().isEmpty(),
       check('state', 'state is required').not().isEmpty(),
       check('location', 'location is required').not().isEmpty(),
       check('google_location', 'google_location is required').not().isEmpty(),
       check('pin_code', 'pin_code is required').not().isEmpty(),
+      check('landline_number', 'landline_number is required').not().isEmpty(),
+      check('fax_number', 'fax_number is required').not().isEmpty(),
+      check('modeofpayment', 'modeofpayment is required').not().isEmpty(),
+      check('address', 'address is required').not().isEmpty(),
+      check('establishment_year', 'establishment_year is required')
+        .not()
+        .isEmpty(),
+      check('timing', 'timing is required').not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -57,7 +68,9 @@ router.post(
     if (req.files.photos != undefined) {
       file = req.files.photos;
       file.forEach((result) => {
-        fileurl.push('http:' + req.hostname + ':' + 5000 + '/' + result.path);
+        fileurl.push(
+          'http:' + '//' + req.hostname + ':' + 5000 + '/' + result.path
+        );
         saveurldb.push(result.path);
       });
     }
@@ -67,74 +80,97 @@ router.post(
     }
     const {
       area,
-      type_of_playarea,
+      registration_no,
+      ownerName,
+      // type_of_playarea,
       playarea_name,
       age_group,
       phone_number,
       website,
       about_playarea,
       email_id,
-      price_per_hour,
+      // price_per_hour,
       no_of_support_staff,
       entry_fee,
-      weekday_rate,
-      weekend_rate,
-      offers,
-      packages,
+      // weekday_rate,
+      // weekend_rate,
+      // offers,
+      // packages,
       facilities,
-      bonus_features,
-      book_requirements,
-      food,
-      music,
-      screen,
-      kids_friendly,
-      products_and_service_offered,
-      branches,
+      // bonus_features,
+      // book_requirements,
+      // food,
+      // music,
+      // screen,
+      // kids_friendly,
+      // products_and_service_offered,
+      // branches,
       country,
       state,
       google_location,
       location,
       pin_code,
+      landline_number,
+      fax_number,
+      modeofpayment,
+      establishment_year,
+      address,
+      timing,
     } = req.body;
 
     images =
-      'http:' + req.hostname + ':' + 5000 + '/' + req.files.images[0].path;
+      'http:' +
+      '//' +
+      req.hostname +
+      ':' +
+      5000 +
+      '/' +
+      req.files.images[0].path;
     photos = fileurl.join();
 
     // Build Playarea Object
     const playareaFeild = {};
     playareaFeild.vender = req.vender.id;
     if (area) playareaFeild.area = area;
-    if (type_of_playarea) playareaFeild.type_of_playarea = type_of_playarea;
+    if (ownerName) playareaFeild.ownerName = ownerName;
+    if (registration_no) playareaFeild.registration_no = registration_no;
+    // if (type_of_playarea) playareaFeild.type_of_playarea = type_of_playarea;
     if (playarea_name) playareaFeild.playarea_name = playarea_name;
     if (age_group) playareaFeild.age_group = age_group;
     if (phone_number) playareaFeild.phone_number = phone_number;
     if (website) playareaFeild.website = website;
     if (about_playarea) playareaFeild.about_playarea = about_playarea;
     if (email_id) playareaFeild.email_id = email_id;
-    if (price_per_hour) playareaFeild.price_per_hour = price_per_hour;
+    // if (price_per_hour) playareaFeild.price_per_hour = price_per_hour;
     if (no_of_support_staff)
       playareaFeild.no_of_support_staff = no_of_support_staff;
     if (entry_fee) playareaFeild.entry_fee = entry_fee;
-    if (weekday_rate) playareaFeild.weekday_rate = weekday_rate;
-    if (weekend_rate) playareaFeild.weekend_rate = weekend_rate;
-    if (offers) playareaFeild.offers = offers;
-    if (packages) playareaFeild.packages = packages;
+    // if (weekday_rate) playareaFeild.weekday_rate = weekday_rate;
+    // if (weekend_rate) playareaFeild.weekend_rate = weekend_rate;
+    // if (offers) playareaFeild.offers = offers;
+    // if (packages) playareaFeild.packages = packages;
     if (facilities) playareaFeild.facilities = facilities;
-    if (bonus_features) playareaFeild.bonus_features = bonus_features;
-    if (book_requirements) playareaFeild.book_requirements = book_requirements;
-    if (food) playareaFeild.food = food;
-    if (music) playareaFeild.music = music;
-    if (screen) playareaFeild.screen = screen;
-    if (kids_friendly) playareaFeild.kids_friendly = kids_friendly;
-    if (products_and_service_offered)
-      playareaFeild.products_and_service_offered = products_and_service_offered;
-    if (branches) playareaFeild.branches = branches;
+    // if (bonus_features) playareaFeild.bonus_features = bonus_features;
+    // if (book_requirements) playareaFeild.book_requirements = book_requirements;
+    // if (food) playareaFeild.food = food;
+    // if (music) playareaFeild.music = music;
+    // if (screen) playareaFeild.screen = screen;
+    // if (kids_friendly) playareaFeild.kids_friendly = kids_friendly;
+    // if (products_and_service_offered)
+    //   playareaFeild.products_and_service_offered = products_and_service_offered;
+    // if (branches) playareaFeild.branches = branches;
     if (country) playareaFeild.country = country;
     if (state) playareaFeild.state = state;
     if (google_location) playareaFeild.google_location = google_location;
     if (location) playareaFeild.location = location;
     if (pin_code) playareaFeild.pin_code = pin_code;
+    if (landline_number) playareaFeild.landline_number = landline_number;
+    if (fax_number) playareaFeild.fax_number = fax_number;
+    if (address) playareaFeild.address = address;
+    if (modeofpayment) playareaFeild.modeofpayment = modeofpayment;
+    if (establishment_year)
+      playareaFeild.establishment_year = establishment_year;
+    if (timing) playareaFeild.timing = timing;
     if (images) playareaFeild.images = images;
     if (photos) playareaFeild.photos = photos;
 
@@ -178,7 +214,7 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const playarea = await Playarea.find();
+    const playarea = await Playarea.find().populate('vender', 'owner_name');
 
     console.log([playarea]);
     return res.json({
@@ -230,7 +266,7 @@ router.get('/vender/:vender_id', async (req, res) => {
   try {
     const playarea = await Playarea.findOne({
       _id: req.params.vender_id,
-    });
+    }).populate('vender', 'owner_name');
 
     if (!playarea)
       return res.status(400).json({ status: 0, msg: 'data not found' });
@@ -346,4 +382,29 @@ router.get('/facilities/:query', cors(), function (req, res) {
   );
 });
 
+//@route GET api/age_group
+//@desc  Filter playarea by age_gropup
+//access  Public
+
+router.get('/age_group/:query', cors(), function (req, res) {
+  var query = req.params.query;
+
+  Playarea.find(
+    {
+      age_group: query,
+    },
+    function (err, playarea) {
+      if (err) throw err;
+      if (playarea) {
+        res.json({ status: 1, message: 'success', data: playarea });
+      } else {
+        res.send(
+          JSON.stringify({
+            error: 'Error',
+          })
+        );
+      }
+    }
+  );
+});
 module.exports = router;

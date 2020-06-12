@@ -42,7 +42,6 @@ const CreativeActivitySchema = new mongoose.Schema({
   // },
   min_age: {
     type: String,
-    required: true,
   },
   website: {
     type: String,

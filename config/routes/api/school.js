@@ -28,6 +28,9 @@ router.post(
     auth,
     [
       check('ownerName', 'ownerName is required').not().isEmpty(),
+      check('registration_no', 'registeration_number is required')
+        .not()
+        .isEmpty(),
       check('schoolName', 'SchoolName is required').not().isEmpty(),
       check('email_id', 'email_id is required').not().isEmpty(),
       check('phone_number', 'phone_number is required').not().isEmpty(),
@@ -73,7 +76,9 @@ router.post(
     if (req.files.photos != undefined) {
       file = req.files.photos;
       file.forEach((result) => {
-        fileurl.push('http:' + req.hostname + ':' + 5000 + '/' + result.path);
+        fileurl.push(
+          'http:' + '//' + req.hostname + ':' + 5000 + '/' + result.path
+        );
         saveurldb.push(result.path);
       });
     }
@@ -84,6 +89,7 @@ router.post(
     }
     const {
       ownerName,
+      registration_no,
       schoolName,
       email_id,
       phone_number,
@@ -116,7 +122,13 @@ router.post(
       admission_process,
     } = req.body;
     images =
-      'http:' + req.hostname + ':' + 5000 + '/' + req.files.images[0].path;
+      'http:' +
+      '//' +
+      req.hostname +
+      ':' +
+      5000 +
+      '/' +
+      req.files.images[0].path;
     photos = fileurl.join();
 
     // Build School Object
@@ -124,6 +136,7 @@ router.post(
     schoolFeilds.vender = req.vender.id;
 
     if (ownerName) schoolFeilds.ownerName = ownerName;
+    if (registration_no) schoolFeilds.registration_no = registration_no;
     if (schoolName) schoolFeilds.schoolName = schoolName;
     if (email_id) schoolFeilds.email_id = email_id;
     if (phone_number) schoolFeilds.phone_number = phone_number;
@@ -199,8 +212,7 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const school = await School.find();
-    console.log([school]);
+    const school = await School.find().populate('vender', 'owner_name');
     return res.json({
       status: 1,
       message: 'success',
@@ -250,7 +262,7 @@ router.get('/vender/:vender_id', async (req, res) => {
   try {
     const school = await School.findOne({
       _id: req.params.vender_id,
-    });
+    }).populate('vender', 'owner_name');
 
     if (!school)
       return res.status(400).json({ status: 0, msg: 'data not found' });

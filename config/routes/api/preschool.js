@@ -28,6 +28,9 @@ router.post(
     auth,
     [
       check('ownerName', 'ownerName is required').not().isEmpty(),
+      check('registration_no', 'registeration_number is required')
+        .not()
+        .isEmpty(),
       check('schoolName', 'SchoolName is required').not().isEmpty(),
       check('email_id', 'email_id is required').not().isEmpty(),
       check('phone_number', 'phone_number is required').not().isEmpty(),
@@ -58,12 +61,15 @@ router.post(
       check('addmission_fee', 'addmission_fee is required').not().isEmpty(),
       check('admission_link', 'admission_link is required').not().isEmpty(),
       check('processing_fee', 'processing_fee is required').not().isEmpty(),
+      check('mode_of_payment', 'mode_of_payment is required').not().isEmpty(),
+      check('isrefund', 'isrefund is required').not().isEmpty(),
       check('required_document', 'required_document is required')
         .not()
         .isEmpty(),
       check('admission_process', 'admission_process is required')
         .not()
         .isEmpty(),
+      check('address', 'address is required').not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -74,7 +80,9 @@ router.post(
     if (req.files.photos != undefined) {
       file = req.files.photos;
       file.forEach((result) => {
-        fileurl.push('http:' + req.hostname + ':' + 5000 + '/' + result.path);
+        fileurl.push(
+          'http:' + '//' + req.hostname + ':' + 5000 + '/' + result.path
+        );
         saveurldb.push(result.path);
       });
     }
@@ -84,6 +92,7 @@ router.post(
     }
     const {
       ownerName,
+      registration_no,
       schoolName,
       email_id,
       phone_number,
@@ -107,10 +116,19 @@ router.post(
       admission_link,
       processing_fee,
       required_document,
+      mode_of_payment,
       admission_process,
+      isrefund,
+      address,
     } = req.body;
     images =
-      'http:' + req.hostname + ':' + 5000 + '/' + req.files.images[0].path;
+      'http:' +
+      '//' +
+      req.hostname +
+      ':' +
+      5000 +
+      '/' +
+      req.files.images[0].path;
     photos = fileurl.join();
 
     // Build School Object
@@ -118,8 +136,8 @@ router.post(
     preschoolFeilds.vender = req.vender.id;
 
     if (ownerName) preschoolFeilds.ownerName = ownerName;
+    if (registration_no) preschoolFeilds.registration_no = registration_no;
     if (schoolName) preschoolFeilds.schoolName = schoolName;
-
     if (email_id) preschoolFeilds.email_id = email_id;
     if (phone_number) preschoolFeilds.phone_number = phone_number;
     if (fax_number) preschoolFeilds.fax_number = fax_number;
@@ -144,10 +162,13 @@ router.post(
     if (addmission_fee) preschoolFeilds.addmission_fee = addmission_fee;
     if (admission_link) preschoolFeilds.admission_link = admission_link;
     if (processing_fee) preschoolFeilds.processing_fee = processing_fee;
+    if (mode_of_payment) preschoolFeilds.mode_of_payment = mode_of_payment;
     if (required_document)
       preschoolFeilds.required_document = required_document;
     if (admission_process)
       preschoolFeilds.admission_process = admission_process;
+    if (isrefund) preschoolFeilds.isrefund = isrefund;
+    if (address) preschoolFeilds.address = address;
     if (images) preschoolFeilds.images = images;
     if (photos) preschoolFeilds.photos = photos;
 
@@ -191,7 +212,7 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const preschool = await Preschool.find();
+    const preschool = await Preschool.find().populate('vender', 'owner_name');
     console.log([preschool]);
     return res.json({
       status: 1,
@@ -242,7 +263,7 @@ router.get('/vender/:vender_id', async (req, res) => {
   try {
     const preschool = await Preschool.findOne({
       _id: req.params.vender_id,
-    });
+    }).populate('vender', 'owner_name');
 
     if (!preschool)
       return res.status(400).json({ status: 0, msg: 'data not found' });
