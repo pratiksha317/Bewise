@@ -77,6 +77,7 @@ router.post(
         saveurldb.push(result.path);
       });
     }
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -160,6 +161,9 @@ router.post(
     if (languages) tutionFeilds.languages = languages;
     if (images) tutionFeilds.images = images;
     if (photos) tutionFeilds.photos = photos;
+    // if (photos) {
+    //   tutionFeilds.photos = photos.split(',').map((photos) => photos.trim());
+    // }
 
     try {
       let tution = await Tution.findOne({ _id: req.vender.id });
@@ -201,7 +205,7 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const tution = await Tution.find();
+    const tution = await Tution.find().find().populate('vender', 'owner_name');
     console.log([tution]);
     return res.json({
       status: 1,
@@ -253,7 +257,9 @@ router.get('/vender/:vender_id', async (req, res) => {
   try {
     const tution = await Tution.findOne({
       _id: req.params.vender_id,
-    });
+    })
+      .find()
+      .populate('vender', 'owner_name');
 
     if (!tution)
       return res.status(400).json({ status: 0, msg: 'data not found' });

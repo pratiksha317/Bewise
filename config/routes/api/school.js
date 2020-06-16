@@ -172,6 +172,9 @@ router.post(
     if (images) schoolFeilds.images = images;
     if (photos) schoolFeilds.photos = photos;
 
+    schoolFeilds.gallery = {};
+    if (photos) profileFields.gallery.photos = photos;
+
     try {
       let school = await School.findOne({ _id: req.vender.id });
 

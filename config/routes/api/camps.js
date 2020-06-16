@@ -26,27 +26,25 @@ router.post(
   [
     auth,
     [
-      check('area', 'area is required').not().isEmpty(),
-      check('period', 'period is required').not().isEmpty(),
+      check('registration_no', 'registration_no is required').not().isEmpty(),
       check('camp_name', 'camp_name is required').not().isEmpty(),
-      check('type_of_the_camps', 'type_of_the_camps is required')
-        .not()
-        .isEmpty(),
-      check('phone_number', 'phone_number is required').not().isEmpty(),
+      check('invities', 'invities is required').not().isEmpty(),
+      check('contact_person', 'contact_person is required').not().isEmpty(),
+      // check('phone_number', 'phone_number is required').not().isEmpty(),
       check('website', 'website is required').not().isEmpty(),
-      check('landline_number', 'landline_number is required').not().isEmpty(),
+      // check('landline_number', 'landline_number is required').not().isEmpty(),
       check('email_id', 'email_id is required').not().isEmpty(),
-      check('fax_number', 'fax_number is required').not().isEmpty(),
-      check('weekday_rate', 'weekday_rate is required').not().isEmpty(),
-      check('weekend_rate', 'weekend_rate is required').not().isEmpty(),
-      check('country', 'country is required').not().isEmpty(),
-      check('state', 'state is required').not().isEmpty(),
-      check('location', 'location is required').not().isEmpty(),
-      check('google_location', 'google_location is required').not().isEmpty(),
-      check('pincode', 'pincode is required').not().isEmpty(),
+      check('facebook', 'facebook is required').not().isEmpty(),
+      check('twitter', 'twitter is required').not().isEmpty(),
+      check('event_fee', 'event_fee is required').not().isEmpty(),
+      check('when', 'when is required').not().isEmpty(),
+      check('where', 'where is required').not().isEmpty(),
+      check('registeration', 'registeration is required').not().isEmpty(),
+      // check('google_location', 'google_location is required').not().isEmpty(),
+      // check('pincode', 'pincode is required').not().isEmpty(),
       check('about_camp', 'about_camp is required').not().isEmpty(),
-      check('timing', 'timing is required').not().isEmpty(),
-      check('avg_cost', 'avg_cost is required').not().isEmpty(),
+      // check('timing', 'timing is required').not().isEmpty(),
+      // check('avg_cost', 'avg_cost is required').not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -57,7 +55,9 @@ router.post(
     if (req.files.photos != undefined) {
       file = req.files.photos;
       file.forEach((result) => {
-        fileurl.push('http:' + req.hostname + ':' + 5000 + '/' + result.path);
+        fileurl.push(
+          'http:' + '//' + req.hostname + ':' + 5000 + '/' + result.path
+        );
         saveurldb.push(result.path);
       });
     }
@@ -66,52 +66,53 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
     const {
-      area,
-      period,
+      registration_no,
+      invities,
       camp_name,
-      type_of_the_camps,
+      contact_person,
       email_id,
-      phone_number,
-      landline_number,
-      fax_number,
+      facebook,
+      twitter,
+      event_fee,
       website,
-      country,
-      state,
-      weekday_rate,
-      weekend_rate,
+      when,
+      where,
+      registeration,
+
       about_camp,
-      google_location,
-      location,
-      pincode,
-      timing,
-      avg_cost,
     } = req.body;
     images =
-      'http:' + req.hostname + ':' + 5000 + '/' + req.files.images[0].path;
+      'http:' +
+      '//' +
+      req.hostname +
+      ':' +
+      5000 +
+      '/' +
+      req.files.images[0].path;
     photos = fileurl.join();
 
     // Build Playarea Object
     const campsFeild = {};
     campsFeild.vender = req.vender.id;
-    if (area) campsFeild.area = area;
-    if (period) campsFeild.period = period;
+    if (registration_no) campsFeild.registration_no = registration_no;
+    if (invities) campsFeild.invities = invities;
     if (camp_name) campsFeild.camp_name = camp_name;
-    if (type_of_the_camps) campsFeild.type_of_the_camps = type_of_the_camps;
-    if (phone_number) campsFeild.phone_number = phone_number;
+    if (contact_person) campsFeild.contact_person = contact_person;
+    // if (phone_number) campsFeild.phone_number = phone_number;
     if (website) campsFeild.website = website;
     if (about_camp) campsFeild.about_camp = about_camp;
     if (email_id) campsFeild.email_id = email_id;
-    if (landline_number) campsFeild.landline_number = landline_number;
-    if (fax_number) campsFeild.fax_number = fax_number;
-    if (timing) campsFeild.timing = timing;
-    if (weekday_rate) campsFeild.weekday_rate = weekday_rate;
-    if (weekend_rate) campsFeild.weekend_rate = weekend_rate;
-    if (avg_cost) campsFeild.avg_cost = avg_cost;
-    if (country) campsFeild.country = country;
-    if (state) campsFeild.state = state;
-    if (google_location) campsFeild.google_location = google_location;
-    if (location) campsFeild.location = location;
-    if (pincode) campsFeild.pincode = pincode;
+    if (facebook) campsFeild.facebook = facebook;
+    if (twitter) campsFeild.twitter = twitter;
+    if (event_fee) campsFeild.event_fee = event_fee;
+    if (when) campsFeild.when = when;
+    if (where) campsFeild.where = where;
+    if (registeration) campsFeild.registeration = registeration;
+    // if (country) campsFeild.country = country;
+    // if (state) campsFeild.state = state;
+    // if (google_location) campsFeild.google_location = google_location;
+    // if (location) campsFeild.location = location;
+    // if (pincode) campsFeild.pincode = pincode;
     if (images) campsFeild.images = images;
     if (photos) campsFeild.photos = photos;
 

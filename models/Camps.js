@@ -5,19 +5,32 @@ const CampSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'vender',
   },
-  area: {
+  registration_no: {
     type: String,
     required: true,
   },
-  period: {
-    type: String,
-    required: true,
-  },
+  // area: {
+  //   type: String,
+  //   required: true,
+  // },
+  // period: {
+  //   type: String,
+  //   required: true,
+  // },
   camp_name: {
     type: String,
     required: true,
   },
-  type_of_the_camps: {
+  invities: {
+    type: String,
+    required: true,
+  },
+
+  // type_of_the_camps: {
+  //   type: String,
+  //   required: true,
+  // },
+  contact_person: {
     type: String,
     required: true,
   },
@@ -25,57 +38,82 @@ const CampSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  phone_number: {
+  facebook: {
     type: String,
     required: true,
   },
-  landline_number: {
+  twitter: {
     type: String,
     required: true,
   },
-  fax_number: {
+  event_fee: {
     type: String,
     required: true,
   },
+  when: {
+    type: String,
+    required: true,
+  },
+  where: {
+    type: String,
+    required: true,
+  },
+  registeration: {
+    type: String,
+    required: true,
+  },
+
+  // phone_number: {
+  //   type: String,
+  //   required: true,
+  // },
+  // landline_number: {
+  //   type: String,
+  //   required: true,
+  // },
+  // fax_number: {
+  //   type: String,
+  //   required: true,
+  // },
   website: {
     type: String,
     required: true,
   },
-  country: {
-    type: String,
-    required: true,
-  },
-  state: {
-    type: String,
-    required: true,
-  },
-  location: {
-    type: String,
-    required: true,
-  },
-  pincode: {
-    type: String,
-  },
-  address: {
-    type: String,
-  },
+  // country: {
+  //   type: String,
+  //   required: true,
+  // },
+  // state: {
+  //   type: String,
+  //   required: true,
+  // },
+  // location: {
+  //   type: String,
+  //   required: true,
+  // },
+  // pincode: {
+  //   type: String,
+  // },
+  // address: {
+  //   type: String,
+  // },
   about_camp: {
     type: String,
     required: true,
   },
-  google_location: {
-    type: String,
-    required: true,
-  },
+  // google_location: {
+  //   type: String,
+  //   required: true,
+  // },
 
-  timing: {
-    type: String,
-  },
+  // timing: {
+  //   type: String,
+  // },
 
-  avg_cost: {
-    type: String,
-    required: true,
-  },
+  // avg_cost: {
+  //   type: String,
+  //   required: true,
+  // },
 
   images: {
     type: String,
@@ -83,7 +121,7 @@ const CampSchema = new mongoose.Schema({
   },
   photos: {
     type: String,
-    required: true,
+    // required: true,
   },
 });
 

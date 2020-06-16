@@ -145,9 +145,11 @@ const SchoolSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  photos: {
-    type: String,
-    required: true,
+  gallery: {
+    photos: {
+      type: String,
+      required: true,
+    },
   },
 });
 
