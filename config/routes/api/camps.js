@@ -156,7 +156,7 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const camps = await Camps.find();
+    const camps = await Camps.find().populate('vender', 'owner_name');
 
     console.log([camps]);
     return res.json({
@@ -209,7 +209,7 @@ router.get('/vender/:vender_id', async (req, res) => {
   try {
     const camps = await Camps.findOne({
       _id: req.params.vender_id,
-    });
+    }).populate('vender', 'owner_name');
 
     if (!camps)
       return res.status(400).json({ status: 0, msg: 'data not found' });

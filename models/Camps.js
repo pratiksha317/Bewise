@@ -121,7 +121,7 @@ const CampSchema = new mongoose.Schema({
   },
   photos: {
     type: String,
-    // required: true,
+    required: true,
   },
 });
 

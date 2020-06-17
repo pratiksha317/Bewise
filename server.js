@@ -50,6 +50,10 @@ app.use('/api/preschool', require('./config/routes/api/preschool'));
 app.use('/api/partyhall', require('./config/routes/api/partyhall'));
 app.use('/api/tution', require('./config/routes/api/tution'));
 app.use('/api/camps', require('./config/routes/api/camps'));
+app.use('/api/venue', require('./config/routes/api/venue'));
+app.use('/api/cake', require('./config/routes/api/cake'));
+app.use('/api/entatainer', require('./config/routes/api/entatainer'));
+app.use('/api/supplier', require('./config/routes/api/supplier'));
 app.use(
   '/api/creativeActivity',
   require('./config/routes/api/creativeActivity')
