@@ -9,6 +9,11 @@ const CampSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  contact_no: {
+    type: String,
+    required: true,
+  },
   // area: {
   //   type: String,
   //   required: true,

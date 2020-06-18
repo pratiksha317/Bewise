@@ -28,6 +28,7 @@ router.post(
     [
       check('registration_no', 'registration_no is required').not().isEmpty(),
       check('camp_name', 'camp_name is required').not().isEmpty(),
+      check('contact_no', 'contact_no is required').not().isEmpty(),
       check('invities', 'invities is required').not().isEmpty(),
       check('contact_person', 'contact_person is required').not().isEmpty(),
       check('website', 'website is required').not().isEmpty(),
@@ -63,6 +64,7 @@ router.post(
       registration_no,
       invities,
       camp_name,
+      contact_no,
       contact_person,
       email_id,
       facebook,
@@ -90,6 +92,7 @@ router.post(
     if (registration_no) campsFeild.registration_no = registration_no;
     if (invities) campsFeild.invities = invities;
     if (camp_name) campsFeild.camp_name = camp_name;
+    if (contact_no) campsFeild.contact_no = contact_no;
     if (contact_person) campsFeild.contact_person = contact_person;
     if (website) campsFeild.website = website;
     if (about_camp) campsFeild.about_camp = about_camp;
