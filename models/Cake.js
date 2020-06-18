@@ -9,7 +9,11 @@ const CakeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  cake_Shop: {
+  name: {
+    type: String,
+    required: true,
+  },
+  type: {
     type: String,
     required: true,
   },

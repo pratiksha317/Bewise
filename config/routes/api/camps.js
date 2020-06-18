@@ -30,9 +30,7 @@ router.post(
       check('camp_name', 'camp_name is required').not().isEmpty(),
       check('invities', 'invities is required').not().isEmpty(),
       check('contact_person', 'contact_person is required').not().isEmpty(),
-      // check('phone_number', 'phone_number is required').not().isEmpty(),
       check('website', 'website is required').not().isEmpty(),
-      // check('landline_number', 'landline_number is required').not().isEmpty(),
       check('email_id', 'email_id is required').not().isEmpty(),
       check('facebook', 'facebook is required').not().isEmpty(),
       check('twitter', 'twitter is required').not().isEmpty(),
@@ -40,11 +38,7 @@ router.post(
       check('when', 'when is required').not().isEmpty(),
       check('where', 'where is required').not().isEmpty(),
       check('registeration', 'registeration is required').not().isEmpty(),
-      // check('google_location', 'google_location is required').not().isEmpty(),
-      // check('pincode', 'pincode is required').not().isEmpty(),
       check('about_camp', 'about_camp is required').not().isEmpty(),
-      // check('timing', 'timing is required').not().isEmpty(),
-      // check('avg_cost', 'avg_cost is required').not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -78,7 +72,6 @@ router.post(
       when,
       where,
       registeration,
-
       about_camp,
     } = req.body;
     images =
@@ -91,14 +84,13 @@ router.post(
       req.files.images[0].path;
     photos = fileurl.join();
 
-    // Build Playarea Object
+    // Build Camps Object
     const campsFeild = {};
     campsFeild.vender = req.vender.id;
     if (registration_no) campsFeild.registration_no = registration_no;
     if (invities) campsFeild.invities = invities;
     if (camp_name) campsFeild.camp_name = camp_name;
     if (contact_person) campsFeild.contact_person = contact_person;
-    // if (phone_number) campsFeild.phone_number = phone_number;
     if (website) campsFeild.website = website;
     if (about_camp) campsFeild.about_camp = about_camp;
     if (email_id) campsFeild.email_id = email_id;
@@ -108,11 +100,6 @@ router.post(
     if (when) campsFeild.when = when;
     if (where) campsFeild.where = where;
     if (registeration) campsFeild.registeration = registeration;
-    // if (country) campsFeild.country = country;
-    // if (state) campsFeild.state = state;
-    // if (google_location) campsFeild.google_location = google_location;
-    // if (location) campsFeild.location = location;
-    // if (pincode) campsFeild.pincode = pincode;
     if (images) campsFeild.images = images;
     if (photos) campsFeild.photos = photos;
 

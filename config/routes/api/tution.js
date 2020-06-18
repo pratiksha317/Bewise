@@ -149,7 +149,6 @@ router.post(
     if (about_tution) tutionFeilds.about_tution = about_tution;
     if (google_location) tutionFeilds.google_location = google_location;
     if (subject) tutionFeilds.subject = subject;
-    // if (grade) tutionFeilds.grade = grade;
     if (number_of_teachers)
       tutionFeilds.number_of_teachers = number_of_teachers;
     if (timing) tutionFeilds.timing = timing;
@@ -161,9 +160,6 @@ router.post(
     if (languages) tutionFeilds.languages = languages;
     if (images) tutionFeilds.images = images;
     if (photos) tutionFeilds.photos = photos;
-    // if (photos) {
-    //   tutionFeilds.photos = photos.split(',').map((photos) => photos.trim());
-    // }
 
     try {
       let tution = await Tution.findOne({ _id: req.vender.id });

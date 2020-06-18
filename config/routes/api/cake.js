@@ -9,8 +9,8 @@ const Cake = require('../../../models/Cake');
 const { check, validationResult } = require('express-validator');
 const multer = require('multer');
 
-//@route GET api/school
-//@desc  Create events
+//@route GET api/cake
+//@desc  Create cake
 //access  Private
 
 router.post(
@@ -29,7 +29,8 @@ router.post(
     auth,
     [
       check('registration_no', 'registration_no is required').not().isEmpty(),
-      check('cake_Shop', 'cake_Shop is required').not().isEmpty(),
+      check('name', 'name is required').not().isEmpty(),
+      check('type', 'type is required').not().isEmpty(),
       check('features', 'features is required').not().isEmpty(),
       check('contact_person', 'contact_person is required').not().isEmpty(),
       check('email_id', 'email_id is required').not().isEmpty(),
@@ -39,7 +40,6 @@ router.post(
       check('twitter', 'twitter is required').not().isEmpty(),
       check('google_location', 'google_location is required').not().isEmpty(),
       check('about', 'about is required').not().isEmpty(),
-
       check('establishment_year', 'establishment_year is required')
         .not()
         .isEmpty(),
@@ -47,7 +47,6 @@ router.post(
       check('product', 'product is required').not().isEmpty(),
       check('timing', 'timing year is required').not().isEmpty(),
       check('popular_flavours', 'popular_flavours is required').not().isEmpty(),
-
       check('flavours', 'flavours is required').not().isEmpty(),
       check('price_range', 'price_range is required').not().isEmpty(),
     ],
@@ -60,7 +59,9 @@ router.post(
     if (req.files.photos != undefined) {
       file = req.files.photos;
       file.forEach((result) => {
-        fileurl.push('http:' + req.hostname + ':' + 5000 + '/' + result.path);
+        fileurl.push(
+          'http:' + '//' + req.hostname + ':' + 5000 + '/' + result.path
+        );
         saveurldb.push(result.path);
       });
     }
@@ -70,7 +71,8 @@ router.post(
     }
     const {
       registration_no,
-      cake_Shop,
+      type,
+      name,
       features,
       contact_person,
       email_id,
@@ -89,34 +91,40 @@ router.post(
       price_range,
     } = req.body;
     images =
-      'http:' + req.hostname + ':' + 5000 + '/' + req.files.images[0].path;
+      'http:' +
+      '//' +
+      req.hostname +
+      ':' +
+      5000 +
+      '/' +
+      req.files.images[0].path;
     photos = fileurl.join();
 
-    // Build School Object
-    const venueFeilds = {};
-    venueFeilds.vender = req.vender.id;
+    // Build Venue Object
+    const cakeFeilds = {};
+    cakeFeilds.vender = req.vender.id;
 
-    if (registration_no) venueFeilds.registration_no = registration_no;
-    if (cake_Shop) venueFeilds.cake_Shop = cake_Shop;
-    if (features) venueFeilds.features = features;
-    if (contact_person) venueFeilds.contact_person = contact_person;
-    if (email_id) venueFeilds.email_id = email_id;
-    if (phone_number) venueFeilds.phone_number = phone_number;
-    if (establishment_year) venueFeilds.establishment_year = establishment_year;
-    if (mode_of_payment) venueFeilds.mode_of_payment = mode_of_payment;
-    if (website) venueFeilds.website = website;
-    if (product) venueFeilds.product = product;
-    if (timing) venueFeilds.timing = timing;
-    if (about) venueFeilds.about = about;
-
-    if (facebook) venueFeilds.facebook = facebook;
-    if (twitter) venueFeilds.twitter = twitter;
-    if (google_location) venueFeilds.google_location = google_location;
-    if (popular_flavours) venueFeilds.popular_flavours = popular_flavours;
-    if (flavours) venueFeilds.flavours = flavours;
-    if (price_range) venueFeilds.price_range = price_range;
-    if (images) venueFeilds.images = images;
-    if (photos) venueFeilds.photos = photos;
+    if (registration_no) cakeFeilds.registration_no = registration_no;
+    if (type) cakeFeilds.type = type;
+    if (name) cakeFeilds.name = name;
+    if (features) cakeFeilds.features = features;
+    if (contact_person) cakeFeilds.contact_person = contact_person;
+    if (email_id) cakeFeilds.email_id = email_id;
+    if (phone_number) cakeFeilds.phone_number = phone_number;
+    if (establishment_year) cakeFeilds.establishment_year = establishment_year;
+    if (mode_of_payment) cakeFeilds.mode_of_payment = mode_of_payment;
+    if (website) cakeFeilds.website = website;
+    if (product) cakeFeilds.product = product;
+    if (timing) cakeFeilds.timing = timing;
+    if (about) cakeFeilds.about = about;
+    if (facebook) cakeFeilds.facebook = facebook;
+    if (twitter) cakeFeilds.twitter = twitter;
+    if (google_location) cakeFeilds.google_location = google_location;
+    if (popular_flavours) cakeFeilds.popular_flavours = popular_flavours;
+    if (flavours) cakeFeilds.flavours = flavours;
+    if (price_range) cakeFeilds.price_range = price_range;
+    if (images) cakeFeilds.images = images;
+    if (photos) cakeFeilds.photos = photos;
 
     try {
       let cake = await Cake.findOne({ _id: req.vender.id });
@@ -137,7 +145,7 @@ router.post(
       // }
 
       //Create
-      cake = new Cake(venueFeilds);
+      cake = new Cake(cakeFeilds);
 
       await cake.save();
       return res.json({
@@ -152,90 +160,59 @@ router.post(
   }
 );
 
-// //@route GET api/partyhall
-// //@desc  Get all partyhall
+// //@route GET api/cake
+// //@desc  Get all cake
 // //access  Public
 
-// router.get('/', async (req, res) => {
-//   try {
-//     const partyhall = await PartyHall.find();
-//     console.log([partyhall]);
-//     return res.json({
-//       status: 1,
-//       message: 'success',
-//       data: partyhall,
-//     });
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('server error');
-//   }
-// });
+router.get('/', async (req, res) => {
+  try {
+    const cake = await Cake.find().populate('vender', 'owner_name');
+    console.log([cake]);
+    return res.json({
+      status: 1,
+      message: 'success',
+      data: cake,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('server error');
+  }
+});
 
-// //@route GET api/partyhall/view
-// //@desc  Get all prefered partyhall
-// //access  Public
+//@route GET api/cake/vender/vender_id
+//@desc  Get cake by Id
+//access  Public
 
-// router.get('/view', (req, res, next) => {
-//   PartyHall.find()
-//     .select('partyhall_name   email_id phone_number location')
-//     .exec()
-//     .then((docs) => {
-//       const response = {
-//         partyhall: docs.map((doc) => {
-//           return {
-//             status: 1,
-//             message: 'success',
-//             partyhall_name: doc.camp_name,
-//             email_id: doc.email_id,
-//             phone_number: doc.phone_number,
-//             location: doc.location,
-//           };
-//         }),
-//       };
-//       res.status(200).json(response);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(500).json({
-//         error: err,
-//       });
-//     });
-// });
+router.get('/vender/:vender_id', async (req, res) => {
+  try {
+    const cake = await Cake.findOne({
+      _id: req.params.vender_id,
+    }).populate('vender', 'owner_name');
 
-// //@route GET api/partyhall/vender/vender_id
-// //@desc  Get partyhall by Id
-// //access  Public
+    if (!cake)
+      return res.status(400).json({ status: 0, msg: 'data not found' });
 
-// router.get('/vender/:vender_id', async (req, res) => {
-//   try {
-//     const partyhall = await PartyHall.findOne({
-//       _id: req.params.vender_id,
-//     });
+    return res.json({
+      status: 1,
+      message: 'success',
+      data: cake,
+    });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind == 'objectId') {
+      return res.status(400).json({ status: 0, msg: 'data not found' });
+    }
+    res.status(500).send('server error');
+  }
+});
 
-//     if (!partyhall)
-//       return res.status(400).json({ status: 0, msg: 'data not found' });
-
-//     return res.json({
-//       status: 1,
-//       message: 'success',
-//       data: partyhall,
-//     });
-//   } catch (err) {
-//     console.error(err.message);
-//     if (err.kind == 'objectId') {
-//       return res.status(400).json({ status: 0, msg: 'data not found' });
-//     }
-//     res.status(500).send('server error');
-//   }
-// });
-
-// // //@route  DELETE api/partyhall/:_id
-// // //@desc   Delete  partyhall
-// // //access  Public
+//@route  DELETE api/cake/:_id
+//@desc   Delete  cake
+//access  Public
 
 // router.delete('/:_id', (req, res, next) => {
 //   const id = req.params._id;
-//   PartyHall.remove({ _id: id })
+//   Cake.remove({ _id: id })
 //     .exec()
 //     .then((result) => {
 //       res.status(200).json({ status: 1, message: ' Deleted successfully' });
@@ -246,58 +223,6 @@ router.post(
 //         error: err,
 //       });
 //     });
-// });
-
-// //@route GET api/find/:query
-// //@desc  Search partyhall school by location
-// //access  Public
-
-// router.get('/find/:query', cors(), function (req, res) {
-//   var query = req.params.query;
-
-//   PartyHall.find(
-//     {
-//       location: query,
-//     },
-//     function (err, partyhall) {
-//       if (err) throw err;
-//       if (partyhall) {
-//         res.json(partyhall);
-//       } else {
-//         res.send(
-//           JSON.stringify({
-//             error: 'Error',
-//           })
-//         );
-//       }
-//     }
-//   );
-// });
-
-// //@route GET api/find/:query
-// //@desc  Search partyhall  by type of location
-// //access  Public
-
-// router.get('/type_of_the_party/:query', cors(), function (req, res) {
-//   var query = req.params.query;
-
-//   PartyHall.find(
-//     {
-//       type_of_the_party: query,
-//     },
-//     function (err, partyhall) {
-//       if (err) throw err;
-//       if (partyhall) {
-//         res.json(partyhall);
-//       } else {
-//         res.send(
-//           JSON.stringify({
-//             error: 'Error',
-//           })
-//         );
-//       }
-//     }
-//   );
 // });
 
 module.exports = router;

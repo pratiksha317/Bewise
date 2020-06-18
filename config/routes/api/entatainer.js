@@ -29,6 +29,7 @@ router.post(
     auth,
     [
       check('name', 'name is required').not().isEmpty(),
+      check('type', 'type is required').not().isEmpty(),
       check('entatainer', 'entatainer is required').not().isEmpty(),
       check('contact_person', 'contact_person is required').not().isEmpty(),
       check('email_id', 'email_id is required').not().isEmpty(),
@@ -59,6 +60,7 @@ router.post(
     }
     const {
       name,
+      type,
       entatainer,
       contact_person,
       email_id,
@@ -78,11 +80,11 @@ router.post(
       req.files.images[0].path;
     photos = fileurl.join();
 
-    // Build School Object
+    // Build Object
     const venueFeilds = {};
     venueFeilds.vender = req.vender.id;
-
     if (name) venueFeilds.name = name;
+    if (type) venueFeilds.type = type;
     if (entatainer) venueFeilds.entatainer = entatainer;
     if (fees) venueFeilds.fees = fees;
     if (contact_person) venueFeilds.contact_person = contact_person;
@@ -132,86 +134,55 @@ router.post(
 // //@desc  Get all partyhall
 // //access  Public
 
-// router.get('/', async (req, res) => {
-//   try {
-//     const partyhall = await PartyHall.find();
-//     console.log([partyhall]);
-//     return res.json({
-//       status: 1,
-//       message: 'success',
-//       data: partyhall,
-//     });
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('server error');
-//   }
-// });
+router.get('/', async (req, res) => {
+  try {
+    const entatainer = await Entatainer.find().populate('vender', 'owner_name');
+    console.log([entatainer]);
+    return res.json({
+      status: 1,
+      message: 'success',
+      data: entatainer,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('server error');
+  }
+});
 
-// //@route GET api/partyhall/view
-// //@desc  Get all prefered partyhall
-// //access  Public
+//@route GET api/partyhall/vender/vender_id
+//@desc  Get partyhall by Id
+//access  Public
 
-// router.get('/view', (req, res, next) => {
-//   PartyHall.find()
-//     .select('partyhall_name   email_id phone_number location')
-//     .exec()
-//     .then((docs) => {
-//       const response = {
-//         partyhall: docs.map((doc) => {
-//           return {
-//             status: 1,
-//             message: 'success',
-//             partyhall_name: doc.camp_name,
-//             email_id: doc.email_id,
-//             phone_number: doc.phone_number,
-//             location: doc.location,
-//           };
-//         }),
-//       };
-//       res.status(200).json(response);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(500).json({
-//         error: err,
-//       });
-//     });
-// });
+router.get('/vender/:vender_id', async (req, res) => {
+  try {
+    const entatainer = await Entatainer.findOne({
+      _id: req.params.vender_id,
+    }).populate('vender', 'owner_name');
 
-// //@route GET api/partyhall/vender/vender_id
-// //@desc  Get partyhall by Id
-// //access  Public
+    if (!entatainer)
+      return res.status(400).json({ status: 0, msg: 'data not found' });
 
-// router.get('/vender/:vender_id', async (req, res) => {
-//   try {
-//     const partyhall = await PartyHall.findOne({
-//       _id: req.params.vender_id,
-//     });
+    return res.json({
+      status: 1,
+      message: 'success',
+      data: entatainer,
+    });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind == 'objectId') {
+      return res.status(400).json({ status: 0, msg: 'data not found' });
+    }
+    res.status(500).send('server error');
+  }
+});
 
-//     if (!partyhall)
-//       return res.status(400).json({ status: 0, msg: 'data not found' });
-
-//     return res.json({
-//       status: 1,
-//       message: 'success',
-//       data: partyhall,
-//     });
-//   } catch (err) {
-//     console.error(err.message);
-//     if (err.kind == 'objectId') {
-//       return res.status(400).json({ status: 0, msg: 'data not found' });
-//     }
-//     res.status(500).send('server error');
-//   }
-// });
-
-// // //@route  DELETE api/partyhall/:_id
-// // //@desc   Delete  partyhall
-// // //access  Public
+//@route  DELETE api/partyhall/:_id
+//@desc   Delete  partyhall
+//access  Public
 
 // router.delete('/:_id', (req, res, next) => {
 //   const id = req.params._id;
-//   PartyHall.remove({ _id: id })
+//   Entatainer.remove({ _id: id })
 //     .exec()
 //     .then((result) => {
 //       res.status(200).json({ status: 1, message: ' Deleted successfully' });
@@ -222,58 +193,6 @@ router.post(
 //         error: err,
 //       });
 //     });
-// });
-
-// //@route GET api/find/:query
-// //@desc  Search partyhall school by location
-// //access  Public
-
-// router.get('/find/:query', cors(), function (req, res) {
-//   var query = req.params.query;
-
-//   PartyHall.find(
-//     {
-//       location: query,
-//     },
-//     function (err, partyhall) {
-//       if (err) throw err;
-//       if (partyhall) {
-//         res.json(partyhall);
-//       } else {
-//         res.send(
-//           JSON.stringify({
-//             error: 'Error',
-//           })
-//         );
-//       }
-//     }
-//   );
-// });
-
-// //@route GET api/find/:query
-// //@desc  Search partyhall  by type of location
-// //access  Public
-
-// router.get('/type_of_the_party/:query', cors(), function (req, res) {
-//   var query = req.params.query;
-
-//   PartyHall.find(
-//     {
-//       type_of_the_party: query,
-//     },
-//     function (err, partyhall) {
-//       if (err) throw err;
-//       if (partyhall) {
-//         res.json(partyhall);
-//       } else {
-//         res.send(
-//           JSON.stringify({
-//             error: 'Error',
-//           })
-//         );
-//       }
-//     }
-//   );
 // });
 
 module.exports = router;

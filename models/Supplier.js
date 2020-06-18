@@ -9,6 +9,10 @@ const SupplierSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  type: {
+    type: String,
+    required: true,
+  },
   entatainer: {
     type: String,
     required: true,
@@ -39,6 +43,10 @@ const SupplierSchema = new mongoose.Schema({
   },
 
   twitter: {
+    type: String,
+    required: true,
+  },
+  fees: {
     type: String,
     required: true,
   },

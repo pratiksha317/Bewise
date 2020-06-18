@@ -55,13 +55,11 @@ router.post(
       check('number_of_trainee', 'number_of_trainee is required')
         .not()
         .isEmpty(),
-
       check('timing', 'timing is required').not().isEmpty(),
       check('establishment_Year', 'establishment_Year is required')
         .not()
         .isEmpty(),
       check('avg_anual_fee', 'avg_anual_fee is required').not().isEmpty(),
-
       check('addmission_fee', 'addmission_fee is required').not().isEmpty(),
       check('class_frequency', 'class_frequency is required').not().isEmpty(),
       check('fax_number', 'fax_number is required').not().isEmpty(),

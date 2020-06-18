@@ -30,21 +30,16 @@ router.post(
       check('registration_no', 'registeration_number is required')
         .not()
         .isEmpty(),
-      // check('type_of_playarea', 'type_of_playarea is required').not().isEmpty(),
       check('playarea_name', 'playarea_name is required').not().isEmpty(),
       check('age_group', 'age_group is required').not().isEmpty(),
       check('phone_number', 'phone_number is required').not().isEmpty(),
       check('website', 'website is required').not().isEmpty(),
       check('about_playarea', 'about_playarea is required').not().isEmpty(),
       check('email_id', 'email_id is required').not().isEmpty(),
-      // check('price_per_hour', 'price_per_hour is required').not().isEmpty(),
       check('no_of_support_staff', 'no_of_support_staff is required')
         .not()
         .isEmpty(),
       check('entry_fee', 'entry_fee is required').not().isEmpty(),
-      // check('weekday_rate', 'weekday_rate is required').not().isEmpty(),
-      // check('weekend_rate', 'weekend_rate is required').not().isEmpty(),
-      // check('packages', 'packages is required').not().isEmpty(),
       check('country', 'country is required').not().isEmpty(),
       check('state', 'state is required').not().isEmpty(),
       check('location', 'location is required').not().isEmpty(),
@@ -82,29 +77,15 @@ router.post(
       area,
       registration_no,
       ownerName,
-      // type_of_playarea,
       playarea_name,
       age_group,
       phone_number,
       website,
       about_playarea,
       email_id,
-      // price_per_hour,
       no_of_support_staff,
       entry_fee,
-      // weekday_rate,
-      // weekend_rate,
-      // offers,
-      // packages,
       facilities,
-      // bonus_features,
-      // book_requirements,
-      // food,
-      // music,
-      // screen,
-      // kids_friendly,
-      // products_and_service_offered,
-      // branches,
       country,
       state,
       google_location,
@@ -134,31 +115,16 @@ router.post(
     if (area) playareaFeild.area = area;
     if (ownerName) playareaFeild.ownerName = ownerName;
     if (registration_no) playareaFeild.registration_no = registration_no;
-    // if (type_of_playarea) playareaFeild.type_of_playarea = type_of_playarea;
     if (playarea_name) playareaFeild.playarea_name = playarea_name;
     if (age_group) playareaFeild.age_group = age_group;
     if (phone_number) playareaFeild.phone_number = phone_number;
     if (website) playareaFeild.website = website;
     if (about_playarea) playareaFeild.about_playarea = about_playarea;
     if (email_id) playareaFeild.email_id = email_id;
-    // if (price_per_hour) playareaFeild.price_per_hour = price_per_hour;
     if (no_of_support_staff)
       playareaFeild.no_of_support_staff = no_of_support_staff;
     if (entry_fee) playareaFeild.entry_fee = entry_fee;
-    // if (weekday_rate) playareaFeild.weekday_rate = weekday_rate;
-    // if (weekend_rate) playareaFeild.weekend_rate = weekend_rate;
-    // if (offers) playareaFeild.offers = offers;
-    // if (packages) playareaFeild.packages = packages;
     if (facilities) playareaFeild.facilities = facilities;
-    // if (bonus_features) playareaFeild.bonus_features = bonus_features;
-    // if (book_requirements) playareaFeild.book_requirements = book_requirements;
-    // if (food) playareaFeild.food = food;
-    // if (music) playareaFeild.music = music;
-    // if (screen) playareaFeild.screen = screen;
-    // if (kids_friendly) playareaFeild.kids_friendly = kids_friendly;
-    // if (products_and_service_offered)
-    //   playareaFeild.products_and_service_offered = products_and_service_offered;
-    // if (branches) playareaFeild.branches = branches;
     if (country) playareaFeild.country = country;
     if (state) playareaFeild.state = state;
     if (google_location) playareaFeild.google_location = google_location;

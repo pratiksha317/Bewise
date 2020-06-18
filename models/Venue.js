@@ -5,11 +5,16 @@ const VenueSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'vender',
   },
+
   registration_no: {
     type: String,
     required: true,
   },
-  venue_name: {
+  name: {
+    type: String,
+    required: true,
+  },
+  type: {
     type: String,
     required: true,
   },
@@ -81,6 +86,16 @@ const VenueSchema = new mongoose.Schema({
   },
 
   about: {
+    type: String,
+    required: true,
+  },
+
+  address: {
+    type: String,
+    required: true,
+  },
+
+  pincode: {
     type: String,
     required: true,
   },

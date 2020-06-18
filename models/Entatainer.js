@@ -9,6 +9,10 @@ const EntatainerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  type: {
+    type: String,
+    required: true,
+  },
   entatainer: {
     type: String,
     required: true,
