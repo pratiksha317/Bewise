@@ -13,7 +13,7 @@ const mysql = require('../../../config/db');
 router.post('/', upload.single('images'), (req, res) => {
   let data = {
     registration_no: req.body.registration_no,
-    camp_name: req.body.camp_name,
+    venue_name: req.body.venue_name,
     contact_person: req.body.contact_person,
     sub_categories: req.body.sub_categories,
     email_id: req.body.email_id,
@@ -26,16 +26,26 @@ router.post('/', upload.single('images'), (req, res) => {
     pincode: req.body.pincode,
     about: req.body.about,
     google_location: req.body.google_location,
-    when_event: req.body.when_event,
-    where_event: req.body.where_event,
-    register_info: req.body.register_info,
+    food: req.body.food,
+    hall_type: req.body.hall_type,
+    hall_capcity: req.body.hall_capcity,
+    dinning_capacity: req.body.dinning_capacity,
+    car_parking_slot: req.body.car_parking_slot,
+    two_parking_slot: req.body.two_parking_slot,
     event_fee: req.body.event_fee,
     facebook: req.body.facebook,
     twitter: req.body.twitter,
-    images: 'http:' + '//' + req.hostname + ':' + 5000 + '/' + req.file.path,
+    est_year: req.body.est_year,
+    prod_service: req.body.prod_service,
+    mod_payment: req.body.mod_payment,
+    po_flov: req.body.po_flov,
+    flov: req.body.flov,
+    price_range: req.body.price_range,
     status: req.body.status,
+    images: 'http:' + '//' + req.hostname + ':' + 5000 + '/' + req.file.path,
   };
-  let sql = 'INSERT INTO bw_sesonal_camp SET ?';
+
+  let sql = 'INSERT INTO bw_events SET ?';
   let query = mysql.query(sql, data, (err, results) => {
     if (err) throw err;
     return res.json({

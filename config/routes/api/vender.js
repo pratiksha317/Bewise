@@ -34,6 +34,7 @@ router.post(
       'password',
       'Please enter a password with 6 or more Character'
     ).isLength({ min: 6 }),
+    check('business_type', 'business_type is required').not().isEmpty(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -53,6 +54,7 @@ router.post(
       pin_code,
       address,
       password,
+      business_type,
     } = req.body;
 
     try {
@@ -77,6 +79,7 @@ router.post(
         pin_code,
         address,
         password,
+        business_type,
       });
 
       //Encrypt password

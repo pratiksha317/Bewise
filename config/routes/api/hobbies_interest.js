@@ -4,7 +4,7 @@ const cors = require('cors');
 const auth = require('../../../middleware/auth1');
 const upload = require('../../../middleware/upload');
 const multer = require('multer');
-const mysql = require('../../../config/db');
+const mysql = require('../../db');
 
 //@route POST api/preschool
 //@desc  Add  school Data
@@ -13,9 +13,9 @@ const mysql = require('../../../config/db');
 router.post('/', upload.single('images'), (req, res) => {
   let data = {
     registration_no: req.body.registration_no,
-    camp_name: req.body.camp_name,
-    contact_person: req.body.contact_person,
+    academy_name: req.body.academy_name,
     sub_categories: req.body.sub_categories,
+    sub_types: req.body.sub_types,
     email_id: req.body.email_id,
     phone_number: req.body.phone_number,
     fax_number: req.body.fax_number,
@@ -26,16 +26,18 @@ router.post('/', upload.single('images'), (req, res) => {
     pincode: req.body.pincode,
     about: req.body.about,
     google_location: req.body.google_location,
-    when_event: req.body.when_event,
-    where_event: req.body.where_event,
-    register_info: req.body.register_info,
-    event_fee: req.body.event_fee,
-    facebook: req.body.facebook,
-    twitter: req.body.twitter,
+    clss_freq: req.body.clss_freq,
+    opening_time: req.body.opening_time,
+    mode_of_payment: req.body.mode_of_payment,
+    no_teacher: req.body.no_teacher,
+    est_year: req.body.est_year,
+    avg_fee: req.body.avg_fee,
+    admit_fee: req.body.admit_fee,
+    admit_link: req.body.admit_link,
     images: 'http:' + '//' + req.hostname + ':' + 5000 + '/' + req.file.path,
     status: req.body.status,
   };
-  let sql = 'INSERT INTO bw_sesonal_camp SET ?';
+  let sql = 'INSERT INTO bw_hobby_interest SET ?';
   let query = mysql.query(sql, data, (err, results) => {
     if (err) throw err;
     return res.json({
