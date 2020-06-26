@@ -41,10 +41,13 @@ router.post('/', upload.single('images'), (req, res) => {
     admit_fee: req.body.admit_fee,
     is_refund: req.body.is_refund,
     images: 'http:' + '//' + req.hostname + ':' + 5000 + '/' + req.file.path,
+    photos: req.body.photos,
     status: req.body.status,
   };
   let sql = 'INSERT INTO bw_pre_schools SET ?';
   let query = mysql.query(sql, data, (err, results) => {
+    console.log(req.file);
+
     if (err) throw err;
     return res.json({
       status: 1,
